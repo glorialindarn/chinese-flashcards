@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcard Bahasa Cina</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --ink: #211f1c;
+    --paper: #ece4d3;
+    --paper-deep: #ddd2b8;
+    --seal: #9a2e26;
+    --seal-deep: #7a2019;
+    --jade: #3f5c4d;
+    --gold: #b8912f;
+    --card-back: #fbf8f1;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(154,46,38,0.04), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(63,92,77,0.05), transparent 45%);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 20px 14px 60px;
+  }
+
+  .wrap { max-width: 480px; margin: 0 auto; }
+
+  header {
+    text-align: left;
+    margin-bottom: 18px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 12px;
+  }
+
+  header h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 26px;
+    margin: 0 0 4px;
+    letter-spacing: 0.5px;
+  }
+
+  header p {
+    margin: 0;
+    font-size: 13px;
+    color: #55504a;
+  }
+
+  .levels {
+    display: flex;
+    gap: 6px;
+    margin: 16px 0 14px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .level-btn {
+    flex: none;
+    padding: 7px 13px;
+    border-radius: 3px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--ink);
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .level-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12.5px;
+    color: #55504a;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--paper-deep);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--seal);
+    transition: width 0.25s ease;
+  }
+
+  .card-stage {
+    perspective: 1200px;
+    margin-bottom: 18px;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(.4,.2,.2,1);
+    cursor: pointer;
+  }
+  .card.flipped { transform: rotateY(180deg); }
+
+  .face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.12);
+  }
+
+  .face-front {
+    background: var(--card-back);
+    border: 1.5px solid var(--ink);
+  }
+
+  .face-back {
+    background: var(--jade);
+    color: var(--card-back);
+    transform: rotateY(180deg);
+    border: 1.5px solid var(--jade);
+  }
+
+  .hanzi {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 58px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  .pinyin {
+    font-size: 17px;
+    color: var(--seal);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .face-front .tap-hint {
+    position: absolute;
+    bottom: 14px;
+    font-size: 11px;
+    color: #948d80;
+  }
+
+  .meaning {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .meaning-sub {
+    font-size: 13px;
+    opacity: 0.85;
+  }
+
+  .controls {
+    display: flex;
+    gap: 8px;
+  }
+
+  .ctrl-btn {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 4px;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .btn-prev {
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+  }
+
+  .btn-next {
+    background: var(--seal);
+    color: var(--card-back);
+  }
+
+  .btn-shuffle {
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    color: var(--gold);
+    flex: none;
+    width: 46px;
+  }
+
+  footer {
+    margin-top: 22px;
+    font-size: 12px;
+    color: #7a746a;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>汉语卡片 · Kad Belajar Bahasa Cina</h1>
+    <p>Level 1–4 · Tap kad untuk lihat maksud</p>
+  </header>
+
+  <div class="levels" id="levelTabs"></div>
+
+  <div class="progress-row">
+    <span id="progressLabel">Kad 1 / 1</span>
+    <span id="levelLabel"></span>
+  </div>
+  <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+
+  <div class="card-stage">
+    <div class="card" id="card">
+      <div class="face face-front">
+        <div class="hanzi" id="hanzi">你好</div>
+        <div class="pinyin" id="pinyin">nǐ hǎo</div>
+        <div class="tap-hint">tap untuk balik</div>
+      </div>
+      <div class="face face-back">
+        <div class="meaning" id="meaning">Hai / Helo</div>
+        <div class="meaning-sub" id="meaningSub"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn btn-prev" id="prevBtn">◀ Sebelum</button>
+    <button class="ctrl-btn btn-shuffle" id="shuffleBtn" title="Shuffle">🔀</button>
+    <button class="ctrl-btn btn-next" id="nextBtn">Lagi ▶</button>
+  </div>
+
+  <footer>Dibina daripada Level 1–4 perbualan awak · practice setiap hari untuk hasil terbaik</footer>
+</div>
+
+<script>
+const data = {
+  1: [
+    { h: "你好", p: "nǐ hǎo", m: "Hai / Helo" },
+    { h: "谢谢", p: "xièxiè", m: "Terima kasih" },
+    { h: "不客气", p: "bú kèqi", m: "Sama-sama" },
+    { h: "再见", p: "zàijiàn", m: "Selamat tinggal" },
+    { h: "早上好", p: "zǎoshang hǎo", m: "Selamat pagi" },
+    { h: "我叫...", p: "wǒ jiào...", m: "Nama saya..." },
+    { h: "我是马来西亚人", p: "wǒ shì Mǎláixīyà rén", m: "Saya orang Malaysia" },
+    { h: "很高兴认识你", p: "hěn gāoxìng rènshi nǐ", m: "Gembira berkenalan dengan awak" },
+  ],
+  2: [
+    { h: "一", p: "yī", m: "Satu (1)" },
+    { h: "二", p: "èr", m: "Dua (2)" },
+    { h: "三", p: "sān", m: "Tiga (3)" },
+    { h: "四", p: "sì", m: "Empat (4)" },
+    { h: "五", p: "wǔ", m: "Lima (5)" },
+    { h: "六", p: "liù", m: "Enam (6)" },
+    { h: "七", p: "qī", m: "Tujuh (7)" },
+    { h: "八", p: "bā", m: "Lapan (8)" },
+    { h: "九", p: "jiǔ", m: "Sembilan (9)" },
+    { h: "十", p: "shí", m: "Sepuluh (10)" },
+    { h: "你好吗?", p: "nǐ hǎo ma?", m: "Apa khabar?" },
+    { h: "我很好,你呢?", p: "wǒ hěn hǎo, nǐ ne?", m: "Saya baik, awak pulak?" },
+    { h: "什么", p: "shénme", m: "Apa" },
+    { h: "多少钱?", p: "duōshǎo qián?", m: "Berapa harga?" },
+    { h: "几点?", p: "jǐ diǎn?", m: "Pukul berapa?" },
+  ],
+  3: [
+    { h: "星期一", p: "xīngqī yī", m: "Isnin" },
+    { h: "星期二", p: "xīngqī èr", m: "Selasa" },
+    { h: "星期三", p: "xīngqī sān", m: "Rabu" },
+    { h: "星期四", p: "xīngqī sì", m: "Khamis" },
+    { h: "星期五", p: "xīngqī wǔ", m: "Jumaat" },
+    { h: "星期六", p: "xīngqī liù", m: "Sabtu" },
+    { h: "星期天", p: "xīngqī tiān", m: "Ahad" },
+    { h: "昨天", p: "zuótiān", m: "Semalam" },
+    { h: "今天", p: "jīntiān", m: "Hari ini" },
+    { h: "明天", p: "míngtiān", m: "Esok" },
+    { h: "现在几点?", p: "xiànzài jǐ diǎn?", m: "Sekarang pukul berapa?" },
+    { h: "三点半", p: "sān diǎn bàn", m: "Pukul 3.30" },
+  ],
+  4: [
+    { h: "上班", p: "shàngbān", m: "Mula kerja" },
+    { h: "下班", p: "xiàbān", m: "Habis kerja" },
+    { h: "开会", p: "kāihuì", m: "Buat mesyuarat" },
+    { h: "老板", p: "lǎobǎn", m: "Bos" },
+    { h: "同事", p: "tóngshì", m: "Rakan sekerja" },
+    { h: "我可以帮你吗?", p: "wǒ kěyǐ bāng nǐ ma?", m: "Boleh saya bantu awak?" },
+    { h: "请等一下", p: "qǐng děng yīxià", m: "Tolong tunggu sekejap" },
+    { h: "我不太明白", p: "wǒ bú tài míngbái", m: "Saya tak berapa faham" },
+    { h: "你可以再说一次吗?", p: "nǐ kěyǐ zài shuō yīcì ma?", m: "Boleh awak cakap sekali lagi?" },
+    { h: "没问题", p: "méi wèntí", m: "Tiada masalah" },
+    { h: "欢迎光临", p: "huānyíng guānglín", m: "Selamat datang (kedai/business)" },
+    { h: "请查收", p: "qǐng chá shōu", m: "Sila semak (lampiran email)" },
+    { h: "谢谢配合", p: "xièxiè pèihé", m: "Terima kasih atas kerjasama" },
+  ],
+};
+
+const levelNames = { 1: "Level 1 · Bunyi & Salam", 2: "Level 2 · Angka & Khabar", 3: "Level 3 · Masa & Hari", 4: "Level 4 · Office & Kerja" };
+
+let currentLevel = 1;
+let currentIndex = 0;
+let deck = [...data[1]];
+let flipped = false;
+
+const cardEl = document.getElementById('card');
+const hanziEl = document.getElementById('hanzi');
+const pinyinEl = document.getElementById('pinyin');
+const meaningEl = document.getElementById('meaning');
+const progressLabel = document.getElementById('progressLabel');
+const levelLabel = document.getElementById('levelLabel');
+const progressFill = document.getElementById('progressFill');
+const levelTabs = document.getElementById('levelTabs');
+
+function buildTabs() {
+  levelTabs.innerHTML = '';
+  Object.keys(data).forEach(lvl => {
+    const btn = document.createElement('button');
+    btn.className = 'level-btn' + (Number(lvl) === currentLevel ? ' active' : '');
+    btn.textContent = 'Level ' + lvl;
+    btn.onclick = () => switchLevel(Number(lvl));
+    levelTabs.appendChild(btn);
+  });
+}
+
+function switchLevel(lvl) {
+  currentLevel = lvl;
+  deck = [...data[lvl]];
+  currentIndex = 0;
+  flipped = false;
+  cardEl.classList.remove('flipped');
+  buildTabs();
+  render();
+}
+
+function render() {
+  const item = deck[currentIndex];
+  hanziEl.textContent = item.h;
+  pinyinEl.textContent = item.p;
+  meaningEl.textContent = item.m;
+  progressLabel.textContent = `Kad ${currentIndex + 1} / ${deck.length}`;
+  levelLabel.textContent = levelNames[currentLevel];
+  progressFill.style.width = `${((currentIndex + 1) / deck.length) * 100}%`;
+}
+
+cardEl.addEventListener('click', () => {
+  flipped = !flipped;
+  cardEl.classList.toggle('flipped', flipped);
+});
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+  currentIndex = (currentIndex + 1) % deck.length;
+  flipped = false;
+  cardEl.classList.remove('flipped');
+  render();
+});
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  currentIndex = (currentIndex - 1 + deck.length) % deck.length;
+  flipped = false;
+  cardEl.classList.remove('flipped');
+  render();
+});
+
+document.getElementById('shuffleBtn').addEventListener('click', () => {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  currentIndex = 0;
+  flipped = false;
+  cardEl.classList.remove('flipped');
+  render();
+});
+
+buildTabs();
+render();
+</script>
+</body>
+</html>
