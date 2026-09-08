@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flashcard Bahasa Cina</title>
+<title>HSK 1 Flashcard</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -12,7 +12,6 @@
     --paper: #ece4d3;
     --paper-deep: #ddd2b8;
     --seal: #9a2e26;
-    --seal-deep: #7a2019;
     --jade: #3f5c4d;
     --gold: #b8912f;
     --card-back: #fbf8f1;
@@ -43,7 +42,7 @@
 
   header h1 {
     font-family: 'Noto Serif SC', serif;
-    font-size: 26px;
+    font-size: 25px;
     margin: 0 0 4px;
     letter-spacing: 0.5px;
   }
@@ -57,19 +56,19 @@
   .levels {
     display: flex;
     gap: 6px;
-    margin: 16px 0 14px;
+    margin: 16px 0 6px;
     overflow-x: auto;
-    padding-bottom: 2px;
+    padding-bottom: 4px;
   }
 
   .level-btn {
     flex: none;
-    padding: 7px 13px;
+    padding: 7px 12px;
     border-radius: 3px;
     border: 1.5px solid var(--ink);
     background: transparent;
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 600;
     cursor: pointer;
     color: var(--ink);
@@ -80,6 +79,13 @@
   .level-btn.active {
     background: var(--ink);
     color: var(--paper);
+  }
+
+  .session-desc {
+    font-size: 12px;
+    color: #7a746a;
+    margin-bottom: 12px;
+    min-height: 16px;
   }
 
   .progress-row {
@@ -147,9 +153,9 @@
 
   .hanzi {
     font-family: 'Noto Serif SC', serif;
-    font-size: 58px;
+    font-size: 54px;
     font-weight: 700;
-    line-height: 1.1;
+    line-height: 1.15;
     margin-bottom: 10px;
   }
 
@@ -171,11 +177,6 @@
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 8px;
-  }
-
-  .meaning-sub {
-    font-size: 13px;
-    opacity: 0.85;
   }
 
   .controls {
@@ -225,11 +226,12 @@
 <div class="wrap">
 
   <header>
-    <h1>汉语卡片 · Kad Belajar Bahasa Cina</h1>
-    <p>Level 1–4 · Tap kad untuk lihat maksud</p>
+    <h1>HSK 1 · 汉语水平考试</h1>
+    <p>Sesi 1–5 · Tap kad untuk lihat maksud</p>
   </header>
 
   <div class="levels" id="levelTabs"></div>
+  <div class="session-desc" id="sessionDesc"></div>
 
   <div class="progress-row">
     <span id="progressLabel">Kad 1 / 1</span>
@@ -240,13 +242,12 @@
   <div class="card-stage">
     <div class="card" id="card">
       <div class="face face-front">
-        <div class="hanzi" id="hanzi">你好</div>
-        <div class="pinyin" id="pinyin">nǐ hǎo</div>
+        <div class="hanzi" id="hanzi">我</div>
+        <div class="pinyin" id="pinyin">wǒ</div>
         <div class="tap-hint">tap untuk balik</div>
       </div>
       <div class="face face-back">
-        <div class="meaning" id="meaning">Hai / Helo</div>
-        <div class="meaning-sub" id="meaningSub"></div>
+        <div class="meaning" id="meaning">saya</div>
       </div>
     </div>
   </div>
@@ -257,70 +258,141 @@
     <button class="ctrl-btn btn-next" id="nextBtn">Lagi ▶</button>
   </div>
 
-  <footer>Dibina daripada Level 1–4 perbualan awak · practice setiap hari untuk hasil terbaik</footer>
+  <footer>HSK Level 1 · 150 perkataan teras · practice sikit-sikit setiap hari</footer>
 </div>
 
 <script>
 const data = {
   1: [
-    { h: "你好", p: "nǐ hǎo", m: "Hai / Helo" },
-    { h: "谢谢", p: "xièxiè", m: "Terima kasih" },
-    { h: "不客气", p: "bú kèqi", m: "Sama-sama" },
-    { h: "再见", p: "zàijiàn", m: "Selamat tinggal" },
-    { h: "早上好", p: "zǎoshang hǎo", m: "Selamat pagi" },
-    { h: "我叫...", p: "wǒ jiào...", m: "Nama saya..." },
-    { h: "我是马来西亚人", p: "wǒ shì Mǎláixīyà rén", m: "Saya orang Malaysia" },
-    { h: "很高兴认识你", p: "hěn gāoxìng rènshi nǐ", m: "Gembira berkenalan dengan awak" },
+    { h: "我", p: "wǒ", m: "saya" },
+    { h: "你", p: "nǐ", m: "awak" },
+    { h: "您", p: "nín", m: "awak (formal/hormat)" },
+    { h: "他", p: "tā", m: "dia (lelaki)" },
+    { h: "她", p: "tā", m: "dia (perempuan)" },
+    { h: "我们", p: "wǒmen", m: "kami/kita" },
+    { h: "你们", p: "nǐmen", m: "kamu semua" },
+    { h: "这", p: "zhè", m: "ini" },
+    { h: "那", p: "nà", m: "itu" },
+    { h: "哪", p: "nǎ", m: "yang mana" },
+    { h: "哪儿/哪里", p: "nǎr / nǎlǐ", m: "mana (tempat)" },
+    { h: "谁", p: "shéi", m: "siapa" },
+    { h: "什么", p: "shénme", m: "apa" },
+    { h: "大家", p: "dàjiā", m: "semua orang" },
   ],
   2: [
-    { h: "一", p: "yī", m: "Satu (1)" },
-    { h: "二", p: "èr", m: "Dua (2)" },
-    { h: "三", p: "sān", m: "Tiga (3)" },
-    { h: "四", p: "sì", m: "Empat (4)" },
-    { h: "五", p: "wǔ", m: "Lima (5)" },
-    { h: "六", p: "liù", m: "Enam (6)" },
-    { h: "七", p: "qī", m: "Tujuh (7)" },
-    { h: "八", p: "bā", m: "Lapan (8)" },
-    { h: "九", p: "jiǔ", m: "Sembilan (9)" },
-    { h: "十", p: "shí", m: "Sepuluh (10)" },
-    { h: "你好吗?", p: "nǐ hǎo ma?", m: "Apa khabar?" },
-    { h: "我很好,你呢?", p: "wǒ hěn hǎo, nǐ ne?", m: "Saya baik, awak pulak?" },
-    { h: "什么", p: "shénme", m: "Apa" },
-    { h: "多少钱?", p: "duōshǎo qián?", m: "Berapa harga?" },
-    { h: "几点?", p: "jǐ diǎn?", m: "Pukul berapa?" },
+    { h: "是", p: "shì", m: "adalah" },
+    { h: "有", p: "yǒu", m: "ada / mempunyai" },
+    { h: "在", p: "zài", m: "berada di / sedang" },
+    { h: "去", p: "qù", m: "pergi" },
+    { h: "来", p: "lái", m: "datang" },
+    { h: "看", p: "kàn", m: "tengok / baca" },
+    { h: "吃", p: "chī", m: "makan" },
+    { h: "喝", p: "hē", m: "minum" },
+    { h: "说", p: "shuō", m: "cakap" },
+    { h: "听", p: "tīng", m: "dengar" },
+    { h: "读", p: "dú", m: "baca (lantang)" },
+    { h: "写", p: "xiě", m: "tulis" },
+    { h: "学习", p: "xuéxí", m: "belajar" },
+    { h: "工作", p: "gōngzuò", m: "kerja" },
+    { h: "睡觉", p: "shuìjiào", m: "tidur" },
+    { h: "喜欢", p: "xǐhuan", m: "suka" },
+    { h: "爱", p: "ài", m: "sayang / cinta" },
+    { h: "想", p: "xiǎng", m: "nak / rasa nak" },
+    { h: "会", p: "huì", m: "boleh (kemahiran)" },
+    { h: "能", p: "néng", m: "boleh (keupayaan/izin)" },
+    { h: "好", p: "hǎo", m: "baik / bagus" },
+    { h: "大", p: "dà", m: "besar" },
+    { h: "小", p: "xiǎo", m: "kecil" },
+    { h: "多", p: "duō", m: "banyak" },
+    { h: "少", p: "shǎo", m: "sedikit" },
+    { h: "高兴", p: "gāoxìng", m: "gembira" },
+    { h: "冷", p: "lěng", m: "sejuk" },
+    { h: "热", p: "rè", m: "panas" },
+    { h: "漂亮", p: "piàoliang", m: "cantik" },
   ],
   3: [
-    { h: "星期一", p: "xīngqī yī", m: "Isnin" },
-    { h: "星期二", p: "xīngqī èr", m: "Selasa" },
-    { h: "星期三", p: "xīngqī sān", m: "Rabu" },
-    { h: "星期四", p: "xīngqī sì", m: "Khamis" },
-    { h: "星期五", p: "xīngqī wǔ", m: "Jumaat" },
-    { h: "星期六", p: "xīngqī liù", m: "Sabtu" },
-    { h: "星期天", p: "xīngqī tiān", m: "Ahad" },
-    { h: "昨天", p: "zuótiān", m: "Semalam" },
-    { h: "今天", p: "jīntiān", m: "Hari ini" },
-    { h: "明天", p: "míngtiān", m: "Esok" },
-    { h: "现在几点?", p: "xiànzài jǐ diǎn?", m: "Sekarang pukul berapa?" },
-    { h: "三点半", p: "sān diǎn bàn", m: "Pukul 3.30" },
+    { h: "不", p: "bù", m: "tidak / bukan (present/general)" },
+    { h: "没 / 没有", p: "méi / méiyǒu", m: "tidak (past) / tiada" },
+    { h: "了", p: "le", m: "particle: perbuatan siap/selesai" },
+    { h: "的", p: "de", m: "particle: milik ('punya')" },
+    { h: "吗", p: "ma", m: "particle: tukar jadi soalan ya/tak" },
+    { h: "呢", p: "ne", m: "particle: 'macam mana pulak?'" },
   ],
   4: [
-    { h: "上班", p: "shàngbān", m: "Mula kerja" },
-    { h: "下班", p: "xiàbān", m: "Habis kerja" },
-    { h: "开会", p: "kāihuì", m: "Buat mesyuarat" },
-    { h: "老板", p: "lǎobǎn", m: "Bos" },
-    { h: "同事", p: "tóngshì", m: "Rakan sekerja" },
-    { h: "我可以帮你吗?", p: "wǒ kěyǐ bāng nǐ ma?", m: "Boleh saya bantu awak?" },
-    { h: "请等一下", p: "qǐng děng yīxià", m: "Tolong tunggu sekejap" },
-    { h: "我不太明白", p: "wǒ bú tài míngbái", m: "Saya tak berapa faham" },
-    { h: "你可以再说一次吗?", p: "nǐ kěyǐ zài shuō yīcì ma?", m: "Boleh awak cakap sekali lagi?" },
-    { h: "没问题", p: "méi wèntí", m: "Tiada masalah" },
-    { h: "欢迎光临", p: "huānyíng guānglín", m: "Selamat datang (kedai/business)" },
-    { h: "请查收", p: "qǐng chá shōu", m: "Sila semak (lampiran email)" },
-    { h: "谢谢配合", p: "xièxiè pèihé", m: "Terima kasih atas kerjasama" },
+    { h: "零", p: "líng", m: "0" },
+    { h: "百", p: "bǎi", m: "ratus" },
+    { h: "岁", p: "suì", m: "umur (tahun)" },
+    { h: "年", p: "nián", m: "tahun" },
+    { h: "月", p: "yuè", m: "bulan" },
+    { h: "号/日", p: "hào / rì", m: "tarikh (hari dalam bulan)" },
+    { h: "星期", p: "xīngqī", m: "minggu" },
+    { h: "天", p: "tiān", m: "hari" },
+    { h: "今天", p: "jīntiān", m: "hari ini" },
+    { h: "明天", p: "míngtiān", m: "esok" },
+    { h: "昨天", p: "zuótiān", m: "semalam" },
+    { h: "现在", p: "xiànzài", m: "sekarang" },
+    { h: "点", p: "diǎn", m: "pukul (jam)" },
+    { h: "分钟", p: "fēnzhōng", m: "minit" },
+    { h: "上午", p: "shàngwǔ", m: "pagi" },
+    { h: "下午", p: "xiàwǔ", m: "petang" },
+    { h: "晚上", p: "wǎnshàng", m: "malam" },
+    { h: "个", p: "gè", m: "classifier umum (orang/benda)" },
+    { h: "本", p: "běn", m: "classifier: buku" },
+    { h: "杯", p: "bēi", m: "classifier: cawan/gelas" },
+    { h: "张", p: "zhāng", m: "classifier: benda rata (kertas/meja)" },
+    { h: "只", p: "zhī", m: "classifier: haiwan" },
+    { h: "些", p: "xiē", m: "classifier: 'beberapa'" },
+  ],
+  5: [
+    { h: "爸爸", p: "bàba", m: "ayah" },
+    { h: "妈妈", p: "māma", m: "mak" },
+    { h: "儿子", p: "érzi", m: "anak lelaki" },
+    { h: "女儿", p: "nǚ'ér", m: "anak perempuan" },
+    { h: "家", p: "jiā", m: "rumah / keluarga" },
+    { h: "米饭", p: "mǐfàn", m: "nasi" },
+    { h: "菜", p: "cài", m: "sayur / lauk" },
+    { h: "苹果", p: "píngguǒ", m: "epal" },
+    { h: "水", p: "shuǐ", m: "air" },
+    { h: "水果", p: "shuǐguǒ", m: "buah-buahan" },
+    { h: "茶", p: "chá", m: "teh" },
+    { h: "咖啡", p: "kāfēi", m: "kopi" },
+    { h: "学校", p: "xuéxiào", m: "sekolah" },
+    { h: "商店", p: "shāngdiàn", m: "kedai" },
+    { h: "医院", p: "yīyuàn", m: "hospital" },
+    { h: "中国", p: "Zhōngguó", m: "China" },
+    { h: "北京", p: "Běijīng", m: "Beijing" },
+    { h: "书", p: "shū", m: "buku" },
+    { h: "电视", p: "diànshì", m: "TV" },
+    { h: "电脑", p: "diànnǎo", m: "komputer" },
+    { h: "电话", p: "diànhuà", m: "telefon" },
+    { h: "衣服", p: "yīfu", m: "baju" },
+    { h: "猫", p: "māo", m: "kucing" },
+    { h: "狗", p: "gǒu", m: "anjing" },
+    { h: "做", p: "zuò", m: "buat" },
+    { h: "买", p: "mǎi", m: "beli" },
+    { h: "打电话", p: "dǎ diànhuà", m: "telefon (buat panggilan)" },
+    { h: "坐", p: "zuò", m: "duduk / naik (transport)" },
+    { h: "开", p: "kāi", m: "buka / pandu" },
+    { h: "走", p: "zǒu", m: "jalan" },
+    { h: "回家", p: "huí jiā", m: "balik rumah" },
+    { h: "认识", p: "rènshi", m: "kenal" },
+    { h: "觉得", p: "juéde", m: "rasa / fikir" },
+    { h: "请", p: "qǐng", m: "tolong / jemput (polite)" },
+    { h: "下雨", p: "xiàyǔ", m: "hujan" },
+    { h: "怎么", p: "zěnme", m: "macam mana" },
+    { h: "为什么", p: "wèishénme", m: "kenapa" },
+    { h: "和", p: "hé", m: "dan" },
+    { h: "但是", p: "dànshì", m: "tapi" },
   ],
 };
 
-const levelNames = { 1: "Level 1 · Bunyi & Salam", 2: "Level 2 · Angka & Khabar", 3: "Level 3 · Masa & Hari", 4: "Level 4 · Office & Kerja" };
+const levelNames = {
+  1: "Sesi 1 · Pronoun & Salam Asas",
+  2: "Sesi 2 · Kata Kerja & Kata Sifat",
+  3: "Sesi 3 · Kata Nafi & Particle",
+  4: "Sesi 4 · Angka, Masa & Classifier",
+  5: "Sesi 5 · Family, Makanan, Tempat & Objek",
+};
 
 let currentLevel = 1;
 let currentIndex = 0;
@@ -333,6 +405,7 @@ const pinyinEl = document.getElementById('pinyin');
 const meaningEl = document.getElementById('meaning');
 const progressLabel = document.getElementById('progressLabel');
 const levelLabel = document.getElementById('levelLabel');
+const sessionDesc = document.getElementById('sessionDesc');
 const progressFill = document.getElementById('progressFill');
 const levelTabs = document.getElementById('levelTabs');
 
@@ -341,7 +414,7 @@ function buildTabs() {
   Object.keys(data).forEach(lvl => {
     const btn = document.createElement('button');
     btn.className = 'level-btn' + (Number(lvl) === currentLevel ? ' active' : '');
-    btn.textContent = 'Level ' + lvl;
+    btn.textContent = 'Sesi ' + lvl;
     btn.onclick = () => switchLevel(Number(lvl));
     levelTabs.appendChild(btn);
   });
@@ -363,7 +436,8 @@ function render() {
   pinyinEl.textContent = item.p;
   meaningEl.textContent = item.m;
   progressLabel.textContent = `Kad ${currentIndex + 1} / ${deck.length}`;
-  levelLabel.textContent = levelNames[currentLevel];
+  levelLabel.textContent = `Sesi ${currentLevel}`;
+  sessionDesc.textContent = levelNames[currentLevel];
   progressFill.style.width = `${((currentIndex + 1) / deck.length) * 100}%`;
 }
 
